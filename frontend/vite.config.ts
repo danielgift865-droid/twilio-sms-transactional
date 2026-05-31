@@ -6,10 +6,14 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/api': { target: 'http://localhost:3000', changeOrigin: true },
+      '/api':      { target: 'http://localhost:3000', changeOrigin: true },
       '/webhooks': { target: 'http://localhost:3000', changeOrigin: true },
-      '/health': { target: 'http://localhost:3000', changeOrigin: true },
+      '/health':   { target: 'http://localhost:3000', changeOrigin: true },
     },
   },
-  build: { outDir: '../public', emptyOutDir: true },
+  // Build outputs to frontend/dist (Dockerfile copies from there to /app/public)
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true,
+  },
 });
