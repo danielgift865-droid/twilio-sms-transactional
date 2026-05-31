@@ -1,0 +1,201 @@
+{
+  "info": {
+    "name": "Twilio SMS Transactional API",
+    "_postman_id": "sms-transactional-v1",
+    "description": "Full API collection for the Twilio SMS Transactional Alert System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl",  "value": "http://localhost:3000" },
+    { "key": "apiKey",   "value": "your_api_key_here" },
+    { "key": "contactId","value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [{
+        "name": "Health Check",
+        "request": { "method": "GET", "url": "{{baseUrl}}/health" }
+      }]
+    },
+    {
+      "name": "Contacts",
+      "item": [
+        {
+          "name": "List Contacts",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": "{{baseUrl}}/api/contacts"
+          }
+        },
+        {
+          "name": "Create Contact",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-api-key", "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\"phoneNumber\": \"+2348012345678\", \"fullName\": \"Daniel\"}" },
+            "url": "{{baseUrl}}/api/contacts"
+          }
+        },
+        {
+          "name": "Get Contact",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": "{{baseUrl}}/api/contacts/{{contactId}}"
+          }
+        },
+        {
+          "name": "Opt Out Contact",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": "{{baseUrl}}/api/contacts/{{contactId}}/opt-out"
+          }
+        }
+      ]
+    },
+    {
+      "name": "SMS",
+      "item": [
+        {
+          "name": "Send Single SMS",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-api-key", "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\"to\": \"+2348012345678\", \"body\": \"Your order #1234 is confirmed!\", \"contactId\": \"{{contactId}}\"}" },
+            "url": "{{baseUrl}}/api/sms/send"
+          }
+        },
+        {
+          "name": "Send Template SMS",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-api-key", "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\"contactId\": \"{{contactId}}\", \"templateName\": \"order_confirmation\", \"variables\": {\"name\": \"Daniel\", \"orderId\": \"1234\"}}" },
+            "url": "{{baseUrl}}/api/sms/send-template"
+          }
+        },
+        {
+          "name": "Send Bulk SMS",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-api-key", "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\"recipients\": [{\"contactId\": \"{{contactId}}\", \"to\": \"+2348012345678\", \"body\": \"Hello from bulk!\"}]}" },
+            "url": "{{baseUrl}}/api/sms/send-bulk"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "item": [
+        {
+          "name": "List Messages",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": { "raw": "{{baseUrl}}/api/messages?status=delivered", "query": [{ "key": "status", "value": "delivered" }] }
+          }
+        },
+        {
+          "name": "Retry Failed Message",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": "{{baseUrl}}/api/messages/MESSAGE_ID_HERE/retry"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Templates",
+      "item": [
+        {
+          "name": "List Templates",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": "{{baseUrl}}/api/templates"
+          }
+        },
+        {
+          "name": "Create Template",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-api-key", "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\"name\": \"order_confirmation\", \"category\": \"order\", \"body\": \"Hi {{name}}, your order {{orderId}} is confirmed!\"}" },
+            "url": "{{baseUrl}}/api/templates"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Conversations",
+      "item": [
+        {
+          "name": "List Conversations",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": "{{baseUrl}}/api/conversations"
+          }
+        },
+        {
+          "name": "Close Conversation",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": "{{baseUrl}}/api/conversations/CONVERSATION_ID/close"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Webhooks (simulate)",
+      "item": [
+        {
+          "name": "Simulate Inbound SMS",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "From", "value": "+2348012345678" },
+              { "key": "Body", "value": "Thank you!" },
+              { "key": "MessageSid", "value": "SMtest123" }
+            ]},
+            "url": "{{baseUrl}}/webhooks/twilio/inbound"
+          }
+        },
+        {
+          "name": "Simulate Status Callback",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "MessageSid", "value": "SMtest123" },
+              { "key": "MessageStatus", "value": "delivered" }
+            ]},
+            "url": "{{baseUrl}}/webhooks/twilio/status"
+          }
+        }
+      ]
+    }
+  ]
+}
